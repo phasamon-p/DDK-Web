@@ -98,6 +98,16 @@ $errors = array();
 				$Query = "SELECT personid, name, lname, department, permission FROM person";
 				$result = mysqli_query($conn, $Query) or die("database error:". mysqli_error($conn));
 				while( $row = mysqli_fetch_assoc($result) ) {
+                    $Query2 = "SELECT pl_locker FROM person_locker WHERE pl_person = '".$row['personid']."'";
+				    $result2 = mysqli_query($conn, $Query2) or die("database error:". mysqli_error($conn));
+                    $locker = "";
+                    while( $row2 = mysqli_fetch_assoc($result2) ) {
+                        if (strlen($locker) > 0) {
+                            $locker = $locker. ", " .strval($row2['pl_locker']);
+                        }else{
+                            $locker = $locker. "" .strval($row2['pl_locker']);
+                        }    
+                    }
 				?>
                             <tr>
                                 <td>
@@ -116,10 +126,10 @@ $errors = array();
                                     <?php echo $row['permission']; ?>
                                 </td>
                                 <td>
-                                    <?php echo $row['']; ?>
+                                    <?php echo $locker; ?>
                                 </td>
                             </tr>
-                            <?php }?>
+                            <?php } ?>
                         </tbody>
                     </table>
                 </div>
