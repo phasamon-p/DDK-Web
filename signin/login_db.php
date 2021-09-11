@@ -1,7 +1,6 @@
 <?php 
     session_start();
-    include('server.php');
-
+    include('db_conection.php');
     $errors = array();
 
     if (isset($_POST['login_user'])) {
@@ -27,7 +26,7 @@
                 $_SESSION['lname'] = $row['lname'];
                 $_SESSION['permission'] = $row['permission'];    
                 $_SESSION['success'] = "Your are now logged in";
-                header("location: index.php");
+                header("location: ../index.php");
             } else {
                 array_push($errors, "Wrong Username or Password");
                 $_SESSION['error'] = "Wrong Username or Password!";

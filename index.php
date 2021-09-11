@@ -9,7 +9,7 @@ if (!isset($_SESSION['username'])) {
 if (isset($_GET['logout'])) {
     session_destroy();
     unset($_SESSION['username']);
-    header('location: login.php');
+    header('location: signin/login.php');
 }
 
 ?>
@@ -77,7 +77,7 @@ if (isset($_GET['logout'])) {
                         </div>
 
                         <div class="sb-sidenav-menu-heading">Addons</div>
-                        <a class="nav-link" href="register.php">
+                        <a class="nav-link" href="signin/register.php">
                             <div class="sb-nav-link-icon"><i class="fas fa-book-open"></i></div>
                             Create account
                         </a>

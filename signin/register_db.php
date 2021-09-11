@@ -1,7 +1,6 @@
 <?php 
     session_start();
-    
-    include('server.php');
+    include('db_conection.php');
     $errors = array();
 
     if (isset($_POST['reg_user'])) {
