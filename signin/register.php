@@ -6,7 +6,7 @@ include('../inc/header.php');
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <title>Register - SB Admin</title>
+    <title>Register - DDK Report</title>
 </head>
 
 <body class="bg-primary">

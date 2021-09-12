@@ -1,6 +1,7 @@
 <?php 
     session_start();
-    include('db_conection.php');
+    // include('db_conection.php');
+    include('../inc/server.php');
     $errors = array();
 
     if (isset($_POST['login_user'])) {

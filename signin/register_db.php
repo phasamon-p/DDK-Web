@@ -1,6 +1,6 @@
 <?php 
     session_start();
-    include('db_conection.php');
+    include('../inc/server.php');
     $errors = array();
 
     if (isset($_POST['reg_user'])) {
@@ -49,7 +49,7 @@
 
             // $_SESSION['username'] = $username;
             // $_SESSION['success'] = "You are now logged in";
-            header('location: index.php');
+            header('location: ../index.php');
         } else {
             header("location: register.php");
         }

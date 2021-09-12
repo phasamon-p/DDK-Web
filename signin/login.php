@@ -6,7 +6,7 @@
 <!DOCTYPE html>
 <html lang="en">
     <head>
-        <title>Login - SB Admin</title>
+        <title>Login - DDK Report</title>
         <link href="css/styles.css" rel="stylesheet" />
     </head>
     <body class="bg-primary">
