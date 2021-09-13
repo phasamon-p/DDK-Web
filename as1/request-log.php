@@ -86,16 +86,22 @@ $errors = array();
                     <table id="dataTable" class="table table-striped">
                         <thead style="vertical-align: top;">
                             <tr>
-                                <th>Date / Time</th>
                                 <th>User ID</th>
                                 <th>Name</th>
                                 <th>Last name</th>
-                                <th>permission</th>
+                                <th>Department</th>
+                                <th>Date / Time</th>
+                                <th>Request</th>
+                                <th>Recheck</th>
+                                <th>Section</th>
                                 <th>Item number</th>
                                 <th>Product name</th>
-                                <th>Locker</th>
+                                <th>Part number</th>
+                                <th>Part name</th>
+                                <th>Drawing number</th>
                                 <th>Quantity</th>
-                                <th>recheck</th>
+                                <th>Locker</th>
+                                
                             </tr>
                         </thead>
                         <tbody>
@@ -106,7 +112,7 @@ $errors = array();
                     $Query2 = "SELECT name, lname, department, permission FROM person WHERE personid = '".$row['personid']."'";
 				    $result2 = mysqli_query($conn, $Query2) or die("database error:". mysqli_error($conn));
                     while( $row2 = mysqli_fetch_assoc($result2) ) {
-                        $Query3 = "SELECT item_no, product_name, locker, quantity FROM products WHERE qr_code = '".$row['qrcode']."'";
+                        $Query3 = "SELECT section, item_no, product_name, part_no, part_name, drawing_no, locker, quantity FROM products WHERE qr_code = '".$row['qrcode']."'";
                         $result3 = mysqli_query($conn, $Query3) or die("database error:". mysqli_error($conn));
                         while( $row3 = mysqli_fetch_assoc($result3) ) {
                             $Query4 = "SELECT pl_locker FROM products_lockers WHERE pl_products = '".$row3['item_no']."'";
@@ -114,9 +120,6 @@ $errors = array();
                             while( $row4 = mysqli_fetch_assoc($result4) ) {
 				?>
                             <tr>
-                                <td>
-                                    <?php echo $row['date']. ", ".$row['time']; ?>
-                                </td>
                                 <td>
                                     <?php echo $row['personid']; ?>
                                 </td>
@@ -127,7 +130,19 @@ $errors = array();
                                     <?php echo $row2['lname']; ?>
                                 </td>
                                 <td>
-                                    <?php echo $row2['permission']; ?>
+                                    <?php echo $row2['department']; ?>
+                                </td>
+                                <td>
+                                    <?php echo $row['date']. ", ".$row['time']; ?>
+                                </td>
+                                <td>
+                                    <?php echo $row['request']; ?>
+                                </td>
+                                <td>
+                                    <?php echo $row['recheck']; ?>
+                                </td>
+                                <td>
+                                    <?php echo $row3['section']; ?>
                                 </td>
                                 <td>
                                     <?php echo $row3['item_no']; ?>
@@ -136,13 +151,19 @@ $errors = array();
                                     <?php echo $row3['product_name']; ?>
                                 </td>
                                 <td>
-                                    <?php echo $row4['pl_locker']; ?>
+                                    <?php echo $row3['part_no']; ?>
+                                </td>
+                                <td>
+                                    <?php echo $row3['part_name']; ?>
+                                </td>
+                                <td>
+                                    <?php echo $row3['drawing_no']; ?>
                                 </td>
                                 <td>
                                     <?php echo $row3['quantity']; ?>
                                 </td>
                                 <td>
-                                    <?php echo $row['recheck']; ?>
+                                    <?php echo $row4['pl_locker']; ?>
                                 </td>
                             </tr>
                             <?php } } } }?>
