@@ -79,7 +79,7 @@ $errors = array();
                         <li class="breadcrumb-item"><a href="../index.php">Dashboard</a></li>
                         <li class="breadcrumb-item active">User Information</li>
                     </ol>
-                    <div class="btn-group mb-2 " style="float:right;">
+                    <div class="btn-group mb-2 " style="float:left;">
                         <button type="button" class="btn btn-primary dataExport" data-type="excel" data-filename="User Inforamtion">Export XLS</button>
                     </div>
                     <table id="dataTable" class="table table-striped">
