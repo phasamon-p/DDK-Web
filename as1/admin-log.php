@@ -3,6 +3,7 @@ session_start();
 include('../inc/server.php');
 include('../inc/header.php');
 $errors = array();
+
 ?>
 
 <!DOCTYPE html>
@@ -79,9 +80,28 @@ $errors = array();
                         <li class="breadcrumb-item"><a href="../index.php">Dashboard</a></li>
                         <li class="breadcrumb-item active">Admin Log</li>
                     </ol>
-                    <div class="btn-group mb-2 " style="float:left;">
-                        <button type="button" class="btn btn-primary dataExport" data-type="excel"
-                            data-filename="Admin Log">Export XLS</button>
+                    <form action="admin_db.php" method="post">
+                        <div class="row mb-4">
+                            <div class="col-xl-4 col-md-6">
+                                <label for="usr">Start Date:</label>
+                                <input type="text" class="form-control" name="startdate" id="startdatepicker"
+                                    value="<?php echo $_SESSION['startdate']; ?> ">
+                            </div>
+                            <div class="col-xl-4 col-md-6">
+                                <label for="usr">End Date:</label>
+                                <input type="text" class="form-control" name="enddate" id="enddatepicker"
+                                    value="<?php echo $_SESSION['enddate']; ?>">
+                            </div>
+                            <div class="btn-group col-xl-4 col-md-6">
+                                <button type="submit" name="admin_log" class="btn btn-success mt-4">Search</button>
+                            </div>
+                        </div>
+                    </form>
+                    <div class="row mb-4">
+                        <div class="btn-group    col-xl-3 col-md-3" style="float:left;">
+                            <button type="button" class="btn btn-primary dataExport" data-type="excel"
+                                data-filename="Admin Log">Export XLS</button>
+                        </div>
                     </div>
                     <table id="dataTable" class="table table-striped">
                         <thead style="vertical-align: top;">
@@ -97,7 +117,17 @@ $errors = array();
                         </thead>
                         <tbody>
                             <?php 
-				$Query = "SELECT adminid, date_login, time_login, date_logout, time_logout FROM admin_log";
+                            if (isset($_SESSION['startdate']) && isset($_SESSION['enddate']) ){
+                                // echo  $_SESSION['startdate'];
+                                // echo  $_SESSION['enddate'];
+                                $Query = "SELECT adminid, date_login, time_login, date_logout, time_logout FROM admin_log WHERE date_login BETWEEN '".$_SESSION['startdate']."' AND '".$_SESSION['enddate']."'";
+                            }else{
+                                // echo '<script>';
+                                // echo 'console.log("no isset")';
+                                // echo '</script>';
+                                $Query = "SELECT adminid, date_login, time_login, date_logout, time_logout FROM admin_log";
+                            }
+				// $Query = "SELECT adminid, date_login, time_login, date_logout, time_logout FROM admin_log WHERE date_login = '2021-08-13'";
 				$result = mysqli_query($conn, $Query) or die("database error:". mysqli_error($conn));
 				while( $row = mysqli_fetch_assoc($result) ) {
                     $Query2 = "SELECT name, lname, department, permission FROM person WHERE personid = '".$row['adminid']."'";
@@ -148,4 +178,34 @@ $errors = array();
     <script src="../tableExport/tableExport.js"></script>
     <script type="text/javascript" src="../tableExport/jquery.base64.js"></script>
     <script src="../js/export.js"></script>
+    <script>
+    $(function() {
+        $("#startdatepicker").datepicker({
+            dateFormat: 'yy-mm-dd'
+        });
+
+        //selecting the button and adding a click event
+        $("#alert").click(function() {
+            //alerting the value inside the textbox
+            var date = $("#startdatepicker").datepicker("getDate");
+            startdate = $.datepicker.formatDate("yy-mm-dd", date);
+            alert(startdate);
+        });
+    });
+    </script>
+    <script>
+    $(function() {
+        $("#enddatepicker").datepicker({
+            dateFormat: 'yy-mm-dd'
+        });
+
+        //selecting the button and adding a click event
+        $("#alert").click(function() {
+            //alerting the value inside the textbox
+            var date = $("#enddatepicker").datepicker("getDate");
+            var enddate = $.datepicker.formatDate("dd-mm-yy", date);
+            alert(enddate);
+        });
+    });
+    </script>
     <?php include('../inc/footer.php');?>
