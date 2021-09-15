@@ -2,6 +2,7 @@
 session_start();
 include('../inc/server.php');
 include('../inc/header.php');
+include('../inc/config.inc.php');
 $errors = array();
 ?>
 
@@ -46,7 +47,8 @@ $errors = array();
                         <a class="nav-link collapsed" href="#" data-bs-toggle="collapse"
                             data-bs-target="#collapseDepartment" aria-expanded="false" aria-controls="collapseLayouts">
                             <div class="sb-nav-link-icon"><i class="fas fa-columns"></i></div>
-                            AS1
+                            <?php echo $department;?>
+                            <!-- AS1 -->
                             <div class="sb-sidenav-collapse-arrow"><i class="fas fa-angle-down"></i></div>
                         </a>
                         <div class="collapse" id="collapseDepartment" aria-labelledby="headingOne"

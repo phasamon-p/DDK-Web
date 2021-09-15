@@ -2,7 +2,19 @@
 session_start();
 include('../inc/server.php');
 include('../inc/header.php');
+include('../inc/config.inc.php');
 $errors = array();
+if (isset($_SESSION['startdate']) && isset($_SESSION['enddate']) ){
+    $_SESSION['request_startdate'] = $_SESSION['startdate'];
+    $_SESSION['request_enddate'] = $_SESSION['enddate'];
+    unset($_SESSION['startdate']);
+    unset($_SESSION['enddate']);
+    $Query = "SELECT date, time, personid, qrcode, request, recheck FROM request_log WHERE date BETWEEN '".$_SESSION['request_startdate']."' AND '".$_SESSION['request_enddate']."'";
+}else{
+    unset($_SESSION['request_startdate']);
+    unset($_SESSION['request_enddate']);
+    $Query = "SELECT date, time, personid, qrcode, request, recheck FROM request_log";
+}
 ?>
 
 <!DOCTYPE html>
@@ -46,7 +58,8 @@ $errors = array();
                         <a class="nav-link collapsed" href="#" data-bs-toggle="collapse"
                             data-bs-target="#collapseDepartment" aria-expanded="false" aria-controls="collapseLayouts">
                             <div class="sb-nav-link-icon"><i class="fas fa-columns"></i></div>
-                            AS1
+                            <?php echo $department ?>
+                            <!-- AS1 -->
                             <div class="sb-sidenav-collapse-arrow"><i class="fas fa-angle-down"></i></div>
                         </a>
                         <div class="collapse" id="collapseDepartment" aria-labelledby="headingOne"
@@ -79,10 +92,37 @@ $errors = array();
                         <li class="breadcrumb-item"><a href="../index.php">Dashboard</a></li>
                         <li class="breadcrumb-item active">Request Log</li>
                     </ol>
-                    <div class="btn-group mb-2 " style="float:left;">
-                        <button type="button" class="btn btn-primary dataExport" data-type="excel"
-                            data-filename="Request Log">Export XLS</button>
+                    <form action="request_db.php" method="post">
+                        <div class="row mb-4">
+                            <div class="col-xl-4 col-md-6">
+                                <label for="usr">Start Date:</label>
+                                <input type="text" class="form-control" name="startdate" id="startdatepicker">
+                            </div>
+                            <div class="col-xl-4 col-md-6">
+                                <label for="usr">End Date:</label>
+                                <input type="text" class="form-control" name="enddate" id="enddatepicker">
+                            </div>
+                            <div class="btn-group col-xl-4 col-md-6">
+                                <button type="submit" name="request_log" class="btn btn-success mt-4">Search</button>
+                            </div>
+                        </div>
+                    </form>
+                    <div class="row mb-4">
+                        <div class="btn-group    col-xl-3 col-md-3" style="float:left;">
+                            <button type="button" class="btn btn-primary dataExport" data-type="excel"
+                                data-filename="Request Log">Export XLS</button>
+                        </div>
                     </div>
+                    <ol class="breadcrumb mb-2">
+                        <li>Duration :
+                            <?php if (isset($_SESSION['request_startdate']) && isset($_SESSION['request_enddate']) ){ 
+                            echo  "   " .$_SESSION['request_startdate']. " - " . $_SESSION['request_enddate'];
+                        }else{
+                            echo  "All time";
+                        } ?>
+                        </li>
+
+                    </ol>
                     <table id="dataTable" class="table table-striped">
                         <thead style="vertical-align: top;">
                             <tr>
@@ -101,12 +141,12 @@ $errors = array();
                                 <th>Drawing number</th>
                                 <th>Quantity</th>
                                 <th>Locker</th>
-                                
+
                             </tr>
                         </thead>
                         <tbody>
                             <?php 
-				$Query = "SELECT date, time, personid, qrcode, request, recheck FROM request_log";
+				// $Query = "SELECT date, time, personid, qrcode, request, recheck FROM request_log";
 				$result = mysqli_query($conn, $Query) or die("database error:". mysqli_error($conn));
 				while( $row = mysqli_fetch_assoc($result) ) {
                     $Query2 = "SELECT name, lname, department, permission FROM person WHERE personid = '".$row['personid']."'";
@@ -177,4 +217,34 @@ $errors = array();
     <script src="../tableExport/tableExport.js"></script>
     <script type="text/javascript" src="../tableExport/jquery.base64.js"></script>
     <script src="../js/export.js"></script>
+    <script>
+    $(function() {
+        $("#startdatepicker").datepicker({
+            dateFormat: 'yy-mm-dd'
+        });
+
+        //selecting the button and adding a click event
+        $("#alert").click(function() {
+            //alerting the value inside the textbox
+            var date = $("#startdatepicker").datepicker("getDate");
+            startdate = $.datepicker.formatDate("yy-mm-dd", date);
+            alert(startdate);
+        });
+    });
+    </script>
+    <script>
+    $(function() {
+        $("#enddatepicker").datepicker({
+            dateFormat: 'yy-mm-dd'
+        });
+
+        //selecting the button and adding a click event
+        $("#alert").click(function() {
+            //alerting the value inside the textbox
+            var date = $("#enddatepicker").datepicker("getDate");
+            var enddate = $.datepicker.formatDate("dd-mm-yy", date);
+            alert(enddate);
+        });
+    });
+    </script>
     <?php include('../inc/footer.php');?>

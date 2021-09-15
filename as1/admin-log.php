@@ -2,8 +2,18 @@
 session_start();
 include('../inc/server.php');
 include('../inc/header.php');
+include('../inc/config.inc.php');
+// $_SESSION['permission'] = 1;
 $errors = array();
-
+if (isset($_SESSION['startdate']) && isset($_SESSION['enddate']) ){
+    $_SESSION['admin_startdate'] = $_SESSION['startdate'];
+    $_SESSION['admin_enddate'] = $_SESSION['enddate'];
+    unset($_SESSION['startdate']);
+    unset($_SESSION['enddate']);
+    $Query = "SELECT adminid, date_login, time_login, date_logout, time_logout FROM admin_log WHERE date_login BETWEEN '".$_SESSION['admin_startdate']."' AND '".$_SESSION['admin_enddate']."'";
+}else{
+    $Query = "SELECT adminid, date_login, time_login, date_logout, time_logout FROM admin_log";
+}
 ?>
 
 <!DOCTYPE html>
@@ -45,12 +55,12 @@ $errors = array();
                             Dashboard
                         </a>
                         <a class="nav-link collapsed" href="#" data-bs-toggle="collapse"
-                            data-bs-target="#collapseDepartment" aria-expanded="false" aria-controls="collapseLayouts">
+                            data-bs-target="#collapseDepartmentAS1" aria-expanded="false" aria-controls="collapseLayouts">
                             <div class="sb-nav-link-icon"><i class="fas fa-columns"></i></div>
-                            AS1
+                            <?php echo $department ?>
                             <div class="sb-sidenav-collapse-arrow"><i class="fas fa-angle-down"></i></div>
                         </a>
-                        <div class="collapse" id="collapseDepartment" aria-labelledby="headingOne"
+                        <div class="collapse" id="collapseDepartmentAS1" aria-labelledby="headingOne"
                             data-bs-parent="#sidenavAccordion">
                             <nav class="sb-sidenav-menu-nested nav">
                                 <a class="nav-link" href="user.php">User Information</a>
@@ -84,13 +94,11 @@ $errors = array();
                         <div class="row mb-4">
                             <div class="col-xl-4 col-md-6">
                                 <label for="usr">Start Date:</label>
-                                <input type="text" class="form-control" name="startdate" id="startdatepicker"
-                                    value="<?php echo $_SESSION['startdate']; ?> ">
+                                <input type="text" class="form-control" name="startdate" id="startdatepicker">
                             </div>
                             <div class="col-xl-4 col-md-6">
                                 <label for="usr">End Date:</label>
-                                <input type="text" class="form-control" name="enddate" id="enddatepicker"
-                                    value="<?php echo $_SESSION['enddate']; ?>">
+                                <input type="text" class="form-control" name="enddate" id="enddatepicker">
                             </div>
                             <div class="btn-group col-xl-4 col-md-6">
                                 <button type="submit" name="admin_log" class="btn btn-success mt-4">Search</button>
@@ -117,16 +125,6 @@ $errors = array();
                         </thead>
                         <tbody>
                             <?php 
-                            if (isset($_SESSION['startdate']) && isset($_SESSION['enddate']) ){
-                                // echo  $_SESSION['startdate'];
-                                // echo  $_SESSION['enddate'];
-                                $Query = "SELECT adminid, date_login, time_login, date_logout, time_logout FROM admin_log WHERE date_login BETWEEN '".$_SESSION['startdate']."' AND '".$_SESSION['enddate']."'";
-                            }else{
-                                // echo '<script>';
-                                // echo 'console.log("no isset")';
-                                // echo '</script>';
-                                $Query = "SELECT adminid, date_login, time_login, date_logout, time_logout FROM admin_log";
-                            }
 				// $Query = "SELECT adminid, date_login, time_login, date_logout, time_logout FROM admin_log WHERE date_login = '2021-08-13'";
 				$result = mysqli_query($conn, $Query) or die("database error:". mysqli_error($conn));
 				while( $row = mysqli_fetch_assoc($result) ) {
