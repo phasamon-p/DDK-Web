@@ -68,6 +68,7 @@ if (isset($_SESSION['startdate']) && isset($_SESSION['enddate']) ){
                                 <a class="nav-link" href="products.php">Product Information</a>
                                 <a class="nav-link" href="request-log.php">Request Log</a>
                                 <a class="nav-link" href="admin-log.php">Admin Log</a>
+                                <a class="nav-link" href="emergency-log.php">Emergency Log</a>
                             </nav>
                         </div>
                         <div class="sb-sidenav-menu-heading">Addons</div>

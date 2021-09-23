@@ -13,20 +13,7 @@ if (isset($_SESSION['startdate']) && isset($_SESSION['enddate']) ){
 }else{
     unset($_SESSION['request_startdate']);
     unset($_SESSION['request_enddate']);
-    unset($_SESSION['datesearch']);
     $Query = "SELECT date, time, personid, qrcode, request, recheck FROM request_log";
-}
-if (isset($_SESSION['item'])){
-    $_SESSION['request_item'] = $_SESSION['item'];
-    unset($_SESSION['item']);
-}else{
-    unset($_SESSION['request_item']);
-}
-if (isset($_SESSION['product'])){
-    $_SESSION['request_product'] = $_SESSION['product'];
-    unset($_SESSION['product']);
-}else{
-    unset($_SESSION['request_product']);
 }
 ?>
 
@@ -34,7 +21,7 @@ if (isset($_SESSION['product'])){
 <html lang="en">
 
 <head>
-    <title>Request Log - DDK Report</title>
+    <title>Emergency Log - DDK Report</title>
     <script type="text/javascript">
     function changeFuncProduct() {
         var selectBox = document.getElementById("selectBoxProduct");
@@ -114,56 +101,44 @@ if (isset($_SESSION['product'])){
         <div id="layoutSidenav_content">
             <main>
                 <div class="container-fluid px-4">
-                    <h1 class="mt-4">Request Log</h1>
+                    <h1 class="mt-4">Emergency Log</h1>
                     <ol class="breadcrumb mb-2">
                         <li class="breadcrumb-item"><a href="../index.php">Dashboard</a></li>
-                        <li class="breadcrumb-item active">Request Log</li>
+                        <li class="breadcrumb-item active">Emergency Log</li>
                     </ol>
                     <form action="request_db.php" method="post">
                         <div class="row mb-4">
                             <div class="col-xl-6 col-md-6">
                                 <label for="usr">Start Date:</label>
-                                <input type="date" class="form-control" name="startdate" id="startdatepicker" value="<?php echo $_SESSION['request_startdate']?>">
+                                <input type="date" class="form-control" name="startdate" id="startdatepicker">
                             </div>
                             <div class="col-xl-6 col-md-6">
                                 <label for="usr">End Date:</label>
-                                <input type="date" class="form-control" name="enddate" id="enddatepicker" value="<?php echo $_SESSION['request_enddate']?>">
+                                <input type="date" class="form-control" name="enddate" id="enddatepicker">
                             </div>
                         </div>
-                        <?php if (isset($_SESSION['datesearch'])){?>
                         <div class="row mb-4">
                             <div class="col-xl-6 col-md-6">
                                 <label for="usr">Item number:</label>
-                                <select id="selectBoxItem" name="selectBoxItem" class="form-control">
-                                    <option value="<?php if($_SESSION['request_item'] == ""){ echo "";}else{echo $_SESSION['request_item'];}?>" selected disabled hidden><?php if($_SESSION['request_item'] == ""){ echo "Choose Here";}else{echo $_SESSION['request_item'];}?></option>
-                                    <?php 
-                                    $result = mysqli_query($conn, $Query) or die("database error:". mysqli_error($conn));
-                                    while( $row = mysqli_fetch_assoc($result) ) {
-                                        $Query2 = "SELECT section, item_no, product_name, part_no, part_name, drawing_no, locker, quantity FROM products WHERE qr_code = '".$row['qrcode']."'";
-                                        $result2 = mysqli_query($conn, $Query2) or die("database error:". mysqli_error($conn));
-                                        while( $row2 = mysqli_fetch_assoc($result2) ) { ?>
-                                    <option value="<?php echo $row2['item_no'];?>"><?php echo $row2['item_no'];?>
-                                    </option>
-                                    <?php }} ?>
+                                <select id="selectBoxItem" onchange="changeFuncItem();" class="form-control">
+                                    <option value="1">1</option>
+                                    <option value="2">2</option>
+                                    <option>3</option>
+                                    <option>4</option>
                                 </select>
                             </div>
                             <div class="col-xl-6 col-md-6 from-group">
                                 <label for="usr">Product name:</label>
-                                <select id="selectBoxProduct" name="selectBoxProduct" class="form-control">
-                                <option value="<?php if($_SESSION['request_product'] == ""){ echo "";}else{echo $_SESSION['request_product'];}?>" selected disabled hidden><?php if($_SESSION['request_product'] == ""){ echo "Choose Here";}else{echo $_SESSION['request_product'];}?></option>
-                                <?php 
-                                    $result = mysqli_query($conn, $Query) or die("database error:". mysqli_error($conn));
-                                    while( $row = mysqli_fetch_assoc($result) ) {
-                                        $Query2 = "SELECT section, item_no, product_name, part_no, part_name, drawing_no, locker, quantity FROM products WHERE qr_code = '".$row['qrcode']."'";
-                                        $result2 = mysqli_query($conn, $Query2) or die("database error:". mysqli_error($conn));
-                                        while( $row2 = mysqli_fetch_assoc($result2) ) { ?>
-                                    <option value="<?php echo $row2['product_name'];?>"><?php echo $row2['product_name'];?>
-                                    </option>
-                                    <?php }} ?>
+                                <select id="selectBoxProduct" onchange="changeFuncProduct();" class="form-control">
+                                    <option value="1">1</option>
+                                    <option value="2">2</option>
+                                    <option>3</option>
+                                    <option>4</option>
                                 </select>
+
+                                <!-- <input type="date" class="form-control" name="enddate" id="enddatepicker"> -->
                             </div>
                         </div>
-                        <?php } ?>
                         <div class="row mb-4">
                             <div class="btn-group    col-xl-12 col-md-12" style="float:left;">
                                 <button type="submit" name="request_log" class="btn btn-success">Search</button>
@@ -184,7 +159,6 @@ if (isset($_SESSION['product'])){
                             echo  "All time";
                         } ?>
                         </li>
-
                     </ol>
                     <table id="dataTable" class="table table-striped">
                         <thead style="vertical-align: top;">
@@ -216,35 +190,7 @@ if (isset($_SESSION['product'])){
                     $Query2 = "SELECT name, lname, department, permission FROM person WHERE personid = '".$row['personid']."'";
 				    $result2 = mysqli_query($conn, $Query2) or die("database error:". mysqli_error($conn));
                     while( $row2 = mysqli_fetch_assoc($result2) ) {
-                        if (($_SESSION['request_item'] != "") && ($_SESSION['request_product'] != "")){
-                            $Query3 = "SELECT section, item_no, product_name, part_no, part_name, drawing_no, locker, quantity FROM products WHERE qr_code = '".$row['qrcode']."' AND item_no = '".$_SESSION['request_item']."' AND product_name = '".$_SESSION['request_product']."'";
-                            echo '<script>';
-                            echo 'console.log("Request item and product")';
-                            echo '</script>';
-                        }
-                        elseif (($_SESSION['request_item'] != "")){
-                            $Query3 = "SELECT section, item_no, product_name, part_no, part_name, drawing_no, locker, quantity FROM products WHERE qr_code = '".$row['qrcode']."' AND item_no = '".$_SESSION['request_item']."'";
-                            echo '<script>';
-                            echo 'console.log("Request item only")';
-                            // echo 'console.log('.$_SESSION['request_item'].')';
-                            echo '</script>';
-                        }
-                        elseif (($_SESSION['request_product'] != "")){
-                            $Query3 = "SELECT section, item_no, product_name, part_no, part_name, drawing_no, locker, quantity FROM products WHERE qr_code = '".$row['qrcode']."' AND product_name = '".$_SESSION['request_product']."'";
-                            echo '<script>';
-                            echo 'console.log("Request product only")';
-                            echo '</script>';
-                        }
-                        else{
-                            $Query3 = "SELECT section, item_no, product_name, part_no, part_name, drawing_no, locker, quantity FROM products WHERE qr_code = '".$row['qrcode']."'";
-                            echo '<script>';
-                            echo 'console.log("Do not Request")';
-                            echo '</script>';
-                        }
-
-                        // $Query3 = "SELECT section, item_no, product_name, part_no, part_name, drawing_no, locker, quantity FROM products WHERE qr_code = '".$row['qrcode']."'";
-                        // $Query3 = "SELECT section, item_no, product_name, part_no, part_name, drawing_no, locker, quantity FROM products WHERE qr_code = '".$row['qrcode']."' AND item_no = 'A412003054'";
-                        // $Query3 = "SELECT section, item_no, product_name, part_no, part_name, drawing_no, locker, quantity FROM products WHERE qr_code = '".$row['qrcode']."' AND item_no = 'A412003054' AND product_name = '21D6X12'";
+                        $Query3 = "SELECT section, item_no, product_name, part_no, part_name, drawing_no, locker, quantity FROM products WHERE qr_code = '".$row['qrcode']."'";
                         $result3 = mysqli_query($conn, $Query3) or die("database error:". mysqli_error($conn));
                         while( $row3 = mysqli_fetch_assoc($result3) ) {
                             $Query4 = "SELECT pl_locker FROM products_lockers WHERE pl_products = '".$row3['item_no']."'";

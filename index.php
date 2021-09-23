@@ -84,6 +84,7 @@ if (isset($_GET['logout'])) {
                                 <a class="nav-link" href="as1/products.php">Product Information</a>
                                 <a class="nav-link" href="as1/request-log.php">Request Log</a>
                                 <a class="nav-link" href="as1/admin-log.php">Admin Log</a>
+                                <a class="nav-link" href="as1/emergency-log.php">Emergency Log</a>
                             </nav>
                         </div>
 
