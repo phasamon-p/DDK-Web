@@ -22,6 +22,18 @@ if (isset($_SESSION['startdate']) && isset($_SESSION['enddate']) ){
 
 <head>
     <title>Request Log - DDK Report</title>
+    <script type="text/javascript">
+    function changeFuncProduct() {
+        var selectBox = document.getElementById("selectBoxProduct");
+        var productselectedValue = selectBox.options[selectBox.selectedIndex].value;
+        alert("Product Number : " + productselectedValue);
+    }
+    function changeFuncItem() {
+        var selectBox = document.getElementById("selectBoxItem");
+        var itemselectedValue = selectBox.options[selectBox.selectedIndex].value;
+        alert("Item Name : " + itemselectedValue);
+    }
+    </script>
 </head>
 
 <body class="sb-nav-fixed">
@@ -94,21 +106,45 @@ if (isset($_SESSION['startdate']) && isset($_SESSION['enddate']) ){
                     </ol>
                     <form action="request_db.php" method="post">
                         <div class="row mb-4">
-                            <div class="col-xl-4 col-md-6">
+                            <div class="col-xl-6 col-md-6">
                                 <label for="usr">Start Date:</label>
-                                <input type="text" class="form-control" name="startdate" id="startdatepicker">
+                                <input type="date" class="form-control" name="startdate" id="startdatepicker">
                             </div>
-                            <div class="col-xl-4 col-md-6">
+                            <div class="col-xl-6 col-md-6">
                                 <label for="usr">End Date:</label>
-                                <input type="text" class="form-control" name="enddate" id="enddatepicker">
+                                <input type="date" class="form-control" name="enddate" id="enddatepicker">
                             </div>
-                            <div class="btn-group col-xl-4 col-md-6">
-                                <button type="submit" name="request_log" class="btn btn-success mt-4">Search</button>
+                        </div>
+                        <div class="row mb-4">
+                            <div class="col-xl-6 col-md-6">
+                                <label for="usr">Item number:</label>
+                                <select id="selectBoxItem" onchange="changeFuncItem();" class="form-control">
+                                    <option value="1">1</option>
+                                    <option value="2">2</option>
+                                    <option>3</option>
+                                    <option>4</option>
+                                </select>
+                            </div>
+                            <div class="col-xl-6 col-md-6 from-group">
+                                <label for="usr">Product name:</label>
+                                <select id="selectBoxProduct" onchange="changeFuncProduct();" class="form-control">
+                                    <option value="1">1</option>
+                                    <option value="2">2</option>
+                                    <option>3</option>
+                                    <option>4</option>
+                                </select>
+
+                                <!-- <input type="date" class="form-control" name="enddate" id="enddatepicker"> -->
+                            </div>
+                        </div>
+                        <div class="row mb-4">
+                            <div class="btn-group    col-xl-12 col-md-12" style="float:left;">
+                                <button type="submit" name="request_log" class="btn btn-success">Search</button>
                             </div>
                         </div>
                     </form>
                     <div class="row mb-4">
-                        <div class="btn-group    col-xl-3 col-md-3" style="float:left;">
+                        <div class="btn-group    col-xl-12 col-md-12" style="float:left;">
                             <button type="button" class="btn btn-primary dataExport" data-type="excel"
                                 data-filename="Request Log">Export XLS</button>
                         </div>
@@ -130,7 +166,8 @@ if (isset($_SESSION['startdate']) && isset($_SESSION['enddate']) ){
                                 <th>Name</th>
                                 <th>Last name</th>
                                 <th>Department</th>
-                                <th>Date / Time</th>
+                                <th>Date</th>
+                                <th>Time</th>
                                 <th>Request</th>
                                 <th>Recheck</th>
                                 <th>Section</th>
@@ -173,7 +210,10 @@ if (isset($_SESSION['startdate']) && isset($_SESSION['enddate']) ){
                                     <?php echo $row2['department']; ?>
                                 </td>
                                 <td>
-                                    <?php echo $row['date']. ", ".$row['time']; ?>
+                                    <?php echo $row['date']; ?>
+                                </td>
+                                <td>
+                                    <?php echo $row['time']; ?>
                                 </td>
                                 <td>
                                     <?php echo $row['request']; ?>
@@ -203,7 +243,100 @@ if (isset($_SESSION['startdate']) && isset($_SESSION['enddate']) ){
                                     <?php echo $row3['quantity']; ?>
                                 </td>
                                 <td>
-                                    <?php echo $row4['pl_locker']; ?>
+                                    <?php if($department == "PR"){
+                                        switch ($row4['pl_locker']) {
+                                            case 1:
+                                                echo "A";
+                                                break;
+                                            case 2:
+                                                echo "B";
+                                                break;
+                                            case 16:
+                                                echo "C";
+                                                break;
+                                            case 4:
+                                                echo "D";
+                                                break;
+                                            case 5:
+                                                echo "E";
+                                                break;
+                                            case 6:
+                                                echo "F";
+                                                break;
+                                            case 7:
+                                                echo "G";
+                                                break;
+                                            case 8:
+                                                echo "H";
+                                                break;
+                                            case 9:
+                                                echo "I";
+                                                break;
+                                            case 10:
+                                                echo "J";
+                                                break;
+                                            case 11:
+                                                echo "K";
+                                                break;
+                                            case 12:
+                                                echo "L";
+                                                break;
+                                            case 13:
+                                                echo "M";
+                                                break;
+                                            case 14:
+                                                echo "N";
+                                                break;
+                                            case 15:
+                                                echo "O";
+                                                break;
+                                            case 3:
+                                                echo "P";
+                                                break;
+                                            default:
+                                                echo "-";} 
+                                    }else{
+                                        switch ($row4['pl_locker']) {
+                                            case 1:
+                                                echo "A";
+                                                break;
+                                            case 2:
+                                                echo "B";
+                                                break;
+                                            case 3:
+                                                echo "C";
+                                                break;
+                                            case 4:
+                                                echo "D";
+                                                break;
+                                            case 5:
+                                                echo "E";
+                                                break;
+                                            case 6:
+                                                echo "F";
+                                                break;
+                                            case 7:
+                                                echo "G";
+                                                break;
+                                            case 8:
+                                                echo "H";
+                                                break;
+                                            case 9:
+                                                echo "I";
+                                                break;
+                                            case 10:
+                                                echo "J";
+                                                break;
+                                            case 11:
+                                                echo "K";
+                                                break;
+                                            case 12:
+                                                echo "L";
+                                                break;                               
+                                            default:
+                                                echo "-";} 
+                                    }
+                                    ?>
                                 </td>
                             </tr>
                             <?php } } } }?>
@@ -217,7 +350,7 @@ if (isset($_SESSION['startdate']) && isset($_SESSION['enddate']) ){
     <script src="../tableExport/tableExport.js"></script>
     <script type="text/javascript" src="../tableExport/jquery.base64.js"></script>
     <script src="../js/export.js"></script>
-    <script>
+    <!-- <script>
     $(function() {
         $("#startdatepicker").datepicker({
             dateFormat: 'yy-mm-dd'
@@ -246,5 +379,6 @@ if (isset($_SESSION['startdate']) && isset($_SESSION['enddate']) ){
             alert(enddate);
         });
     });
-    </script>
+    </script> -->
+
     <?php include('../inc/footer.php');?>
