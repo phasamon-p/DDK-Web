@@ -243,28 +243,15 @@ if (isset($_SESSION['startdate']) && isset($_SESSION['enddate']) ){
                     while( $row2 = mysqli_fetch_assoc($result2) ) {
                         if (($_SESSION['request_item'] != "") && ($_SESSION['request_product'] != "")){
                             $Query3 = "SELECT section, item_no, product_name, part_no, part_name, drawing_no, locker, quantity FROM products WHERE qr_code = '".$row['qrcode']."' AND item_no = '".$_SESSION['request_item']."' AND product_name = '".$_SESSION['request_product']."'";
-                            echo '<script>';
-                            echo 'console.log("Request item and product")';
-                            echo '</script>';
                         }
                         elseif (($_SESSION['request_item'] != "")){
                             $Query3 = "SELECT section, item_no, product_name, part_no, part_name, drawing_no, locker, quantity FROM products WHERE qr_code = '".$row['qrcode']."' AND item_no = '".$_SESSION['request_item']."'";
-                            echo '<script>';
-                            echo 'console.log("Request item only")';
-                            // echo 'console.log('.$_SESSION['request_item'].')';
-                            echo '</script>';
                         }
                         elseif (($_SESSION['request_product'] != "")){
                             $Query3 = "SELECT section, item_no, product_name, part_no, part_name, drawing_no, locker, quantity FROM products WHERE qr_code = '".$row['qrcode']."' AND product_name = '".$_SESSION['request_product']."'";
-                            echo '<script>';
-                            echo 'console.log("Request product only")';
-                            echo '</script>';
                         }
                         else{
                             $Query3 = "SELECT section, item_no, product_name, part_no, part_name, drawing_no, locker, quantity FROM products WHERE qr_code = '".$row['qrcode']."'";
-                            echo '<script>';
-                            echo 'console.log("Do not Request")';
-                            echo '</script>';
                         }
 
                         // $Query3 = "SELECT section, item_no, product_name, part_no, part_name, drawing_no, locker, quantity FROM products WHERE qr_code = '".$row['qrcode']."'";
