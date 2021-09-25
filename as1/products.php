@@ -131,7 +131,58 @@ $errors = array();
                                         <?php echo $row['drawing_no']; ?>
                                     </td>
                                     <td>
-                                        <?php echo $row2['pl_locker']; ?>
+                                        <?php
+                                        switch ($row2['pl_locker']) {
+                                            case 1:
+                                                echo "A";
+                                                break;
+                                            case 2:
+                                                echo "B";
+                                                break;
+                                            case 3:
+                                                echo "C";
+                                                break;
+                                            case 4:
+                                                echo "D";
+                                                break;
+                                            case 5:
+                                                echo "E";
+                                                break;
+                                            case 6:
+                                                echo "F";
+                                                break;
+                                            case 7:
+                                                echo "G";
+                                                break;
+                                            case 8:
+                                                echo "H";
+                                                break;
+                                            case 9:
+                                                echo "I";
+                                                break;
+                                            case 10:
+                                                echo "J";
+                                                break;
+                                            case 11:
+                                                echo "K";
+                                                break;
+                                            case 12:
+                                                echo "L";
+                                                break;
+                                            case 13:
+                                                echo "M";
+                                                break;
+                                            case 14:
+                                                echo "N";
+                                                break;
+                                            case 15:
+                                                echo "O";
+                                                break;
+                                            case 16:
+                                                echo "P";
+                                                break;
+                                            default:
+                                                echo "-";} ?>
                                     </td>
                                     <td>
                                         <?php echo $row['quantity']; ?>

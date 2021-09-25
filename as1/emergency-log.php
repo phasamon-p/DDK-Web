@@ -184,7 +184,7 @@ if (isset($_SESSION['startdate']) && isset($_SESSION['enddate']) ){
                                         <?php echo $row['activity']; ?>
                                     </td>
                                     <td>
-                                        <?php if($department == "PR"){
+                                        <?php if($department == "AS2"){
                                         switch ($row['locker']) {
                                             case 1:
                                                 echo "A";
@@ -192,7 +192,7 @@ if (isset($_SESSION['startdate']) && isset($_SESSION['enddate']) ){
                                             case 2:
                                                 echo "B";
                                                 break;
-                                            case 16:
+                                            case 3:
                                                 echo "C";
                                                 break;
                                             case 4:
@@ -231,7 +231,7 @@ if (isset($_SESSION['startdate']) && isset($_SESSION['enddate']) ){
                                             case 15:
                                                 echo "O";
                                                 break;
-                                            case 3:
+                                            case 16:
                                                 echo "P";
                                                 break;
                                             default:

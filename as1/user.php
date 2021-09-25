@@ -110,9 +110,109 @@ $errors = array();
                     $locker = "";
                     while( $row2 = mysqli_fetch_assoc($result2) ) {
                         if (strlen($locker) > 0) {
-                            $locker = $locker. ", " .strval($row2['pl_locker']);
+                            switch ($row2['pl_locker']) {
+                                case 1:
+                                    $locker = $locker. ", " .strval("A");
+                                    break;
+                                case 2:
+                                    $locker = $locker. ", " .strval("B");
+                                    break;
+                               case 3:
+                                    $locker = $locker. ", " .strval("C");
+                                    break;
+                                case 4:
+                                    $locker = $locker. ", " .strval("D");
+                                    break;
+                                case 5:
+                                    $locker = $locker. ", " .strval("E");
+                                    break;
+                                case 6:
+                                    $locker = $locker. ", " .strval("F");
+                                    break;
+                                case 7:
+                                    $locker = $locker. ", " .strval("G");
+                                    break;
+                                case 8:
+                                    $locker = $locker. ", " .strval("H");
+                                    break;
+                                case 9:
+                                    $locker = $locker. ", " .strval("I");
+                                    break;
+                                case 10:
+                                    $locker = $locker. ", " .strval("J");
+                                    break;
+                                case 11:
+                                    $locker = $locker. ", " .strval("K");
+                                    break;
+                                case 12:
+                                    $locker = $locker. ", " .strval("L");
+                                    break;
+                                case 13:
+                                    $locker = $locker. ", " .strval("M");
+                                    break;
+                                case 14:
+                                    $locker = $locker. ", " .strval("N");
+                                    break;
+                                case 15:
+                                    $locker = $locker. ", " .strval("O");
+                                    break;
+                                case 16:
+                                    $locker = $locker. ", " .strval("P");
+                                    break;
+                                default:
+                                    echo "-";} 
                         }else{
-                            $locker = $locker. "" .strval($row2['pl_locker']);
+                            switch ($row2['pl_locker']) {
+                                case 1:
+                                    $locker = $locker. "" .strval("A");
+                                    break;
+                                case 2:
+                                    $locker = $locker. "" .strval("B");
+                                    break;
+                               case 3:
+                                    $locker = $locker. "" .strval("C");
+                                    break;
+                                case 4:
+                                    $locker = $locker. "" .strval("D");
+                                    break;
+                                case 5:
+                                    $locker = $locker. "" .strval("E");
+                                    break;
+                                case 6:
+                                    $locker = $locker. "" .strval("F");
+                                    break;
+                                case 7:
+                                    $locker = $locker. "" .strval("G");
+                                    break;
+                                case 8:
+                                    $locker = $locker. "" .strval("H");
+                                    break;
+                                case 9:
+                                    $locker = $locker. "" .strval("I");
+                                    break;
+                                case 10:
+                                    $locker = $locker. "" .strval("J");
+                                    break;
+                                case 11:
+                                    $locker = $locker. "" .strval("K");
+                                    break;
+                                case 12:
+                                    $locker = $locker. "" .strval("L");
+                                    break;
+                                case 13:
+                                    $locker = $locker. "" .strval("M");
+                                    break;
+                                case 14:
+                                    $locker = $locker. "" .strval("N");
+                                    break;
+                                case 15:
+                                    $locker = $locker. "" .strval("O");
+                                    break;
+                                case 16:
+                                    $locker = $locker. "" .strval("P");
+                                    break;
+                                default:
+                                    echo "-";}
                         }    
                     }
 				?>
