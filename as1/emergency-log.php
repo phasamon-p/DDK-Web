@@ -9,11 +9,11 @@ if (isset($_SESSION['startdate']) && isset($_SESSION['enddate']) ){
     $_SESSION['request_enddate'] = $_SESSION['enddate'];
     unset($_SESSION['startdate']);
     unset($_SESSION['enddate']);
-    $Query = "SELECT date, time, personid, qrcode, request, recheck FROM request_log WHERE date BETWEEN '".$_SESSION['request_startdate']."' AND '".$_SESSION['request_enddate']."'";
+    $Query = "SELECT personid, date, time, activity, locker FROM emergency_log WHERE date BETWEEN '".$_SESSION['request_startdate']."' AND '".$_SESSION['request_enddate']."'";
 }else{
     unset($_SESSION['request_startdate']);
     unset($_SESSION['request_enddate']);
-    $Query = "SELECT date, time, personid, qrcode, request, recheck FROM request_log";
+    $Query = "SELECT personid, date, time, activity, locker FROM emergency_log";
 }
 ?>
 
@@ -106,146 +106,86 @@ if (isset($_SESSION['startdate']) && isset($_SESSION['enddate']) ){
                         <li class="breadcrumb-item"><a href="../index.php">Dashboard</a></li>
                         <li class="breadcrumb-item active">Emergency Log</li>
                     </ol>
-                    <form action="request_db.php" method="post">
-                        <div class="row mb-4">
-                            <div class="col-xl-6 col-md-6">
-                                <label for="usr">Start Date:</label>
-                                <input type="date" class="form-control" name="startdate" id="startdatepicker">
+                    <div style="overflow-x:auto;">
+                        <form action="emergency_db.php" method="post">
+                            <div class="row mb-4">
+                                <div class="col-xl-6 col-md-6">
+                                    <label for="usr">Start Date:</label>
+                                    <input type="date" class="form-control" name="startdate" id="startdatepicker">
+                                </div>
+                                <div class="col-xl-6 col-md-6">
+                                    <label for="usr">End Date:</label>
+                                    <input type="date" class="form-control" name="enddate" id="enddatepicker">
+                                </div>
                             </div>
-                            <div class="col-xl-6 col-md-6">
-                                <label for="usr">End Date:</label>
-                                <input type="date" class="form-control" name="enddate" id="enddatepicker">
+                            <div class="row mb-4">
+                                <div class="btn-group    col-xl-12 col-md-12" style="float:left;">
+                                    <button type="submit" name="request_log" class="btn btn-success">Search</button>
+                                </div>
                             </div>
-                        </div>
-                        <div class="row mb-4">
-                            <div class="col-xl-6 col-md-6">
-                                <label for="usr">Item number:</label>
-                                <select id="selectBoxItem" onchange="changeFuncItem();" class="form-control">
-                                    <option value="1">1</option>
-                                    <option value="2">2</option>
-                                    <option>3</option>
-                                    <option>4</option>
-                                </select>
-                            </div>
-                            <div class="col-xl-6 col-md-6 from-group">
-                                <label for="usr">Product name:</label>
-                                <select id="selectBoxProduct" onchange="changeFuncProduct();" class="form-control">
-                                    <option value="1">1</option>
-                                    <option value="2">2</option>
-                                    <option>3</option>
-                                    <option>4</option>
-                                </select>
-
-                                <!-- <input type="date" class="form-control" name="enddate" id="enddatepicker"> -->
-                            </div>
-                        </div>
+                        </form>
                         <div class="row mb-4">
                             <div class="btn-group    col-xl-12 col-md-12" style="float:left;">
-                                <button type="submit" name="request_log" class="btn btn-success">Search</button>
+                                <button type="button" class="btn btn-primary dataExport" data-type="excel"
+                                    data-filename="Emergency Log">Export XLS</button>
                             </div>
                         </div>
-                    </form>
-                    <div class="row mb-4">
-                        <div class="btn-group    col-xl-12 col-md-12" style="float:left;">
-                            <button type="button" class="btn btn-primary dataExport" data-type="excel"
-                                data-filename="Request Log">Export XLS</button>
-                        </div>
-                    </div>
-                    <ol class="breadcrumb mb-2">
-                        <li>Duration :
-                            <?php if (isset($_SESSION['request_startdate']) && isset($_SESSION['request_enddate']) ){ 
+                        <ol class="breadcrumb mb-2">
+                            <li>Duration :
+                                <?php if (isset($_SESSION['request_startdate']) && isset($_SESSION['request_enddate']) ){ 
                             echo  "   " .$_SESSION['request_startdate']. " - " . $_SESSION['request_enddate'];
                         }else{
                             echo  "All time";
                         } ?>
-                        </li>
-                    </ol>
-                    <table id="dataTable" class="table table-striped">
-                        <thead style="vertical-align: top;">
-                            <tr>
-                                <th>User ID</th>
-                                <th>Name</th>
-                                <th>Last name</th>
-                                <th>Department</th>
-                                <th>Date</th>
-                                <th>Time</th>
-                                <th>Request</th>
-                                <th>Recheck</th>
-                                <th>Section</th>
-                                <th>Item number</th>
-                                <th>Product name</th>
-                                <th>Part number</th>
-                                <th>Part name</th>
-                                <th>Drawing number</th>
-                                <th>Quantity</th>
-                                <th>Locker</th>
-
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <?php 
+                            </li>
+                        </ol>
+                        <table id="dataTable" class="table table-striped">
+                            <thead style="vertical-align: top;">
+                                <tr>
+                                    <th>User ID</th>
+                                    <th>Name</th>
+                                    <th>Last name</th>
+                                    <th>Department</th>
+                                    <th>Date</th>
+                                    <th>Time</th>
+                                    <th>Activity</th>
+                                    <th>Locker</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <?php 
 				// $Query = "SELECT date, time, personid, qrcode, request, recheck FROM request_log";
 				$result = mysqli_query($conn, $Query) or die("database error:". mysqli_error($conn));
 				while( $row = mysqli_fetch_assoc($result) ) {
                     $Query2 = "SELECT name, lname, department, permission FROM person WHERE personid = '".$row['personid']."'";
 				    $result2 = mysqli_query($conn, $Query2) or die("database error:". mysqli_error($conn));
                     while( $row2 = mysqli_fetch_assoc($result2) ) {
-                        $Query3 = "SELECT section, item_no, product_name, part_no, part_name, drawing_no, locker, quantity FROM products WHERE qr_code = '".$row['qrcode']."'";
-                        $result3 = mysqli_query($conn, $Query3) or die("database error:". mysqli_error($conn));
-                        while( $row3 = mysqli_fetch_assoc($result3) ) {
-                            $Query4 = "SELECT pl_locker FROM products_lockers WHERE pl_products = '".$row3['item_no']."'";
-                            $result4 = mysqli_query($conn, $Query4) or die("database error:". mysqli_error($conn));
-                            while( $row4 = mysqli_fetch_assoc($result4) ) {
 				?>
-                            <tr>
-                                <td>
-                                    <?php echo $row['personid']; ?>
-                                </td>
-                                <td>
-                                    <?php echo $row2['name']; ?>
-                                </td>
-                                <td>
-                                    <?php echo $row2['lname']; ?>
-                                </td>
-                                <td>
-                                    <?php echo $row2['department']; ?>
-                                </td>
-                                <td>
-                                    <?php echo $row['date']; ?>
-                                </td>
-                                <td>
-                                    <?php echo $row['time']; ?>
-                                </td>
-                                <td>
-                                    <?php echo $row['request']; ?>
-                                </td>
-                                <td>
-                                    <?php echo $row['recheck']; ?>
-                                </td>
-                                <td>
-                                    <?php echo $row3['section']; ?>
-                                </td>
-                                <td>
-                                    <?php echo $row3['item_no']; ?>
-                                </td>
-                                <td>
-                                    <?php echo $row3['product_name']; ?>
-                                </td>
-                                <td>
-                                    <?php echo $row3['part_no']; ?>
-                                </td>
-                                <td>
-                                    <?php echo $row3['part_name']; ?>
-                                </td>
-                                <td>
-                                    <?php echo $row3['drawing_no']; ?>
-                                </td>
-                                <td>
-                                    <?php echo $row3['quantity']; ?>
-                                </td>
-                                <td>
-                                    <?php if($department == "PR"){
-                                        switch ($row4['pl_locker']) {
+                                <tr>
+                                    <td>
+                                        <?php echo $row['personid']; ?>
+                                    </td>
+                                    <td>
+                                        <?php echo $row2['name']; ?>
+                                    </td>
+                                    <td>
+                                        <?php echo $row2['lname']; ?>
+                                    </td>
+                                    <td>
+                                        <?php echo $row2['department']; ?>
+                                    </td>
+                                    <td>
+                                        <?php echo $row['date']; ?>
+                                    </td>
+                                    <td>
+                                        <?php echo $row['time']; ?>
+                                    </td>
+                                    <td>
+                                        <?php echo $row['activity']; ?>
+                                    </td>
+                                    <td>
+                                        <?php if($department == "PR"){
+                                        switch ($row['locker']) {
                                             case 1:
                                                 echo "A";
                                                 break;
@@ -295,9 +235,9 @@ if (isset($_SESSION['startdate']) && isset($_SESSION['enddate']) ){
                                                 echo "P";
                                                 break;
                                             default:
-                                                echo "-";} 
+                                                echo $row['locker'];} 
                                     }else{
-                                        switch ($row4['pl_locker']) {
+                                        switch ($row['locker']) {
                                             case 1:
                                                 echo "A";
                                                 break;
@@ -335,16 +275,16 @@ if (isset($_SESSION['startdate']) && isset($_SESSION['enddate']) ){
                                                 echo "L";
                                                 break;                               
                                             default:
-                                                echo "-";} 
+                                                echo $row['locker'];} 
                                     }
                                     ?>
-                                </td>
-                            </tr>
-                            <?php } } } }?>
-                        </tbody>
-                    </table>
+                                    </td>
+                                </tr>
+                                <?php } }?>
+                            </tbody>
+                        </table>
+                    </div>
                 </div>
-
             </main>
         </div>
     </div>

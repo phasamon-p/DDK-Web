@@ -10,23 +10,21 @@ if (isset($_SESSION['startdate']) && isset($_SESSION['enddate']) ){
     unset($_SESSION['startdate']);
     unset($_SESSION['enddate']);
     $Query = "SELECT date, time, personid, qrcode, request, recheck FROM request_log WHERE date BETWEEN '".$_SESSION['request_startdate']."' AND '".$_SESSION['request_enddate']."'";
+    if (isset($_SESSION['item'])){
+        $_SESSION['request_item'] = $_SESSION['item'];
+        unset($_SESSION['item']);
+    }
+    if (isset($_SESSION['product'])){
+        $_SESSION['request_product'] = $_SESSION['product'];
+        unset($_SESSION['product']);
+    }
 }else{
     unset($_SESSION['request_startdate']);
     unset($_SESSION['request_enddate']);
+    unset($_SESSION['request_item']);
+    unset($_SESSION['request_product']);
     unset($_SESSION['datesearch']);
     $Query = "SELECT date, time, personid, qrcode, request, recheck FROM request_log";
-}
-if (isset($_SESSION['item'])){
-    $_SESSION['request_item'] = $_SESSION['item'];
-    unset($_SESSION['item']);
-}else{
-    unset($_SESSION['request_item']);
-}
-if (isset($_SESSION['product'])){
-    $_SESSION['request_product'] = $_SESSION['product'];
-    unset($_SESSION['product']);
-}else{
-    unset($_SESSION['request_product']);
 }
 ?>
 
@@ -123,11 +121,13 @@ if (isset($_SESSION['product'])){
                         <div class="row mb-4">
                             <div class="col-xl-6 col-md-6">
                                 <label for="usr">Start Date:</label>
-                                <input type="date" class="form-control" name="startdate" id="startdatepicker" value="<?php echo $_SESSION['request_startdate']?>">
+                                <input type="date" class="form-control" name="startdate" id="startdatepicker"
+                                    value="<?php if (isset($_SESSION['datesearch'])){ echo $_SESSION['request_startdate'];}else{echo "";}?>">
                             </div>
                             <div class="col-xl-6 col-md-6">
                                 <label for="usr">End Date:</label>
-                                <input type="date" class="form-control" name="enddate" id="enddatepicker" value="<?php echo $_SESSION['request_enddate']?>">
+                                <input type="date" class="form-control" name="enddate" id="enddatepicker"
+                                    value="<?php if (isset($_SESSION['datesearch'])){ echo $_SESSION['request_enddate'];}else{echo "";}?>">
                             </div>
                         </div>
                         <?php if (isset($_SESSION['datesearch'])){?>
@@ -135,7 +135,9 @@ if (isset($_SESSION['product'])){
                             <div class="col-xl-6 col-md-6">
                                 <label for="usr">Item number:</label>
                                 <select id="selectBoxItem" name="selectBoxItem" class="form-control">
-                                    <option value="<?php if($_SESSION['request_item'] == ""){ echo "";}else{echo $_SESSION['request_item'];}?>" selected disabled hidden><?php if($_SESSION['request_item'] == ""){ echo "Choose Here";}else{echo $_SESSION['request_item'];}?></option>
+                                    <option value="<?php echo $_SESSION['request_item'];?>" selected disabled hidden>
+                                        <?php if($_SESSION['request_item'] == ""){ echo "Choose Here";}else{echo $_SESSION['request_item'];}?>
+                                    </option>
                                     <?php 
                                     $result = mysqli_query($conn, $Query) or die("database error:". mysqli_error($conn));
                                     while( $row = mysqli_fetch_assoc($result) ) {
@@ -150,14 +152,19 @@ if (isset($_SESSION['product'])){
                             <div class="col-xl-6 col-md-6 from-group">
                                 <label for="usr">Product name:</label>
                                 <select id="selectBoxProduct" name="selectBoxProduct" class="form-control">
-                                <option value="<?php if($_SESSION['request_product'] == ""){ echo "";}else{echo $_SESSION['request_product'];}?>" selected disabled hidden><?php if($_SESSION['request_product'] == ""){ echo "Choose Here";}else{echo $_SESSION['request_product'];}?></option>
-                                <?php 
+                                    <option
+                                        value="<?php if($_SESSION['request_product'] == ""){ echo "";}else{echo $_SESSION['request_product'];}?>"
+                                        selected disabled hidden>
+                                        <?php if($_SESSION['request_product'] == ""){ echo "Choose Here";}else{echo $_SESSION['request_product'];}?>
+                                    </option>
+                                    <?php 
                                     $result = mysqli_query($conn, $Query) or die("database error:". mysqli_error($conn));
                                     while( $row = mysqli_fetch_assoc($result) ) {
                                         $Query2 = "SELECT section, item_no, product_name, part_no, part_name, drawing_no, locker, quantity FROM products WHERE qr_code = '".$row['qrcode']."'";
                                         $result2 = mysqli_query($conn, $Query2) or die("database error:". mysqli_error($conn));
                                         while( $row2 = mysqli_fetch_assoc($result2) ) { ?>
-                                    <option value="<?php echo $row2['product_name'];?>"><?php echo $row2['product_name'];?>
+                                    <option value="<?php echo $row2['product_name'];?>">
+                                        <?php echo $row2['product_name'];?>
                                     </option>
                                     <?php }} ?>
                                 </select>
@@ -176,40 +183,58 @@ if (isset($_SESSION['product'])){
                                 data-filename="Request Log">Export XLS</button>
                         </div>
                     </div>
-                    <ol class="breadcrumb mb-2">
-                        <li>Duration :
-                            <?php if (isset($_SESSION['request_startdate']) && isset($_SESSION['request_enddate']) ){ 
-                            echo  "   " .$_SESSION['request_startdate']. " - " . $_SESSION['request_enddate'];
-                        }else{
-                            echo  "All time";
-                        } ?>
-                        </li>
+                    <div class="card">
+                        <div class="card-body">
+                            <ol class="breadcrumb mb-1">
+                                <li>Duration :
+                                    <?php if (isset($_SESSION['request_startdate']) && isset($_SESSION['request_enddate']) ){ 
+                                                echo  "   " .$_SESSION['request_startdate']. " - " . $_SESSION['request_enddate'];
+                                            }else{
+                                                echo  "All time";
+                                            } ?>
+                                </li>
+                            </ol>
+                            <?php if ($_SESSION['request_item'] != ""){ ?>
+                            <ol class="breadcrumb mb-1">
+                                <li>Item Number :
+                                    <?php echo  "   " .$_SESSION['request_item'];?>
+                                </li>
+                            </ol>
+                            <?php } ?>
+                            <?php if ($_SESSION['request_product'] != ""){ ?>
+                            <ol class="breadcrumb mb-1">
+                                <li>Product Number :
+                                    <?php echo  "   " .$_SESSION['request_product'];?>
+                                </li>
+                            </ol>
+                            <?php } ?>
+                        </div>
+                    </div>
+                    <div style="overflow-x:auto;">
+                        <table id="dataTable" class="table table-striped">
+                            <thead style="vertical-align: top;">
+                                <tr>
+                                    <th>User ID</th>
+                                    <th>Name</th>
+                                    <th>Last name</th>
+                                    <th>Department</th>
+                                    <th>Date</th>
+                                    <th>Time</th>
+                                    <th>Request</th>
+                                    <th>Recheck</th>
+                                    <th>Section</th>
+                                    <th>Item number</th>
+                                    <th>Product name</th>
+                                    <th>Part number</th>
+                                    <th>Part name</th>
+                                    <th>Drawing number</th>
+                                    <th>Quantity</th>
+                                    <th>Locker</th>
 
-                    </ol>
-                    <table id="dataTable" class="table table-striped">
-                        <thead style="vertical-align: top;">
-                            <tr>
-                                <th>User ID</th>
-                                <th>Name</th>
-                                <th>Last name</th>
-                                <th>Department</th>
-                                <th>Date</th>
-                                <th>Time</th>
-                                <th>Request</th>
-                                <th>Recheck</th>
-                                <th>Section</th>
-                                <th>Item number</th>
-                                <th>Product name</th>
-                                <th>Part number</th>
-                                <th>Part name</th>
-                                <th>Drawing number</th>
-                                <th>Quantity</th>
-                                <th>Locker</th>
-
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <?php 
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <?php 
 				// $Query = "SELECT date, time, personid, qrcode, request, recheck FROM request_log";
 				$result = mysqli_query($conn, $Query) or die("database error:". mysqli_error($conn));
 				while( $row = mysqli_fetch_assoc($result) ) {
@@ -251,54 +276,54 @@ if (isset($_SESSION['product'])){
                             $result4 = mysqli_query($conn, $Query4) or die("database error:". mysqli_error($conn));
                             while( $row4 = mysqli_fetch_assoc($result4) ) {
 				?>
-                            <tr>
-                                <td>
-                                    <?php echo $row['personid']; ?>
-                                </td>
-                                <td>
-                                    <?php echo $row2['name']; ?>
-                                </td>
-                                <td>
-                                    <?php echo $row2['lname']; ?>
-                                </td>
-                                <td>
-                                    <?php echo $row2['department']; ?>
-                                </td>
-                                <td>
-                                    <?php echo $row['date']; ?>
-                                </td>
-                                <td>
-                                    <?php echo $row['time']; ?>
-                                </td>
-                                <td>
-                                    <?php echo $row['request']; ?>
-                                </td>
-                                <td>
-                                    <?php echo $row['recheck']; ?>
-                                </td>
-                                <td>
-                                    <?php echo $row3['section']; ?>
-                                </td>
-                                <td>
-                                    <?php echo $row3['item_no']; ?>
-                                </td>
-                                <td>
-                                    <?php echo $row3['product_name']; ?>
-                                </td>
-                                <td>
-                                    <?php echo $row3['part_no']; ?>
-                                </td>
-                                <td>
-                                    <?php echo $row3['part_name']; ?>
-                                </td>
-                                <td>
-                                    <?php echo $row3['drawing_no']; ?>
-                                </td>
-                                <td>
-                                    <?php echo $row3['quantity']; ?>
-                                </td>
-                                <td>
-                                    <?php if($department == "PR"){
+                                <tr>
+                                    <td>
+                                        <?php echo $row['personid']; ?>
+                                    </td>
+                                    <td>
+                                        <?php echo $row2['name']; ?>
+                                    </td>
+                                    <td>
+                                        <?php echo $row2['lname']; ?>
+                                    </td>
+                                    <td>
+                                        <?php echo $row2['department']; ?>
+                                    </td>
+                                    <td>
+                                        <?php echo $row['date']; ?>
+                                    </td>
+                                    <td>
+                                        <?php echo $row['time']; ?>
+                                    </td>
+                                    <td>
+                                        <?php echo $row['request']; ?>
+                                    </td>
+                                    <td>
+                                        <?php echo $row['recheck']; ?>
+                                    </td>
+                                    <td>
+                                        <?php echo $row3['section']; ?>
+                                    </td>
+                                    <td>
+                                        <?php echo $row3['item_no']; ?>
+                                    </td>
+                                    <td>
+                                        <?php echo $row3['product_name']; ?>
+                                    </td>
+                                    <td>
+                                        <?php echo $row3['part_no']; ?>
+                                    </td>
+                                    <td>
+                                        <?php echo $row3['part_name']; ?>
+                                    </td>
+                                    <td>
+                                        <?php echo $row3['drawing_no']; ?>
+                                    </td>
+                                    <td>
+                                        <?php echo $row3['quantity']; ?>
+                                    </td>
+                                    <td>
+                                        <?php if($department == "PR"){
                                         switch ($row4['pl_locker']) {
                                             case 1:
                                                 echo "A";
@@ -392,11 +417,12 @@ if (isset($_SESSION['product'])){
                                                 echo "-";} 
                                     }
                                     ?>
-                                </td>
-                            </tr>
-                            <?php } } } }?>
-                        </tbody>
-                    </table>
+                                    </td>
+                                </tr>
+                                <?php } } } }?>
+                            </tbody>
+                        </table>
+                    </div>
                 </div>
 
             </main>

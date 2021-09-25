@@ -82,22 +82,26 @@ $errors = array();
                         <li class="breadcrumb-item"><a href="../index.php">Dashboard</a></li>
                         <li class="breadcrumb-item active">User Information</li>
                     </ol>
-                    <div class="btn-group mb-2 " style="float:left;">
-                        <button type="button" class="btn btn-primary dataExport" data-type="excel" data-filename="User Inforamtion">Export XLS</button>
+                    <div class="row mb-2">
+                        <div class="btn-group    col-xl-12 col-md-12" style="float:left;">
+                            <button type="button" class="btn btn-primary dataExport" data-type="excel"
+                                data-filename="User Log">Export XLS</button>
+                        </div>
                     </div>
-                    <table id="dataTable" class="table table-striped">
-                        <thead style="vertical-align: top;">
-                            <tr>
-                                <th>User ID</th>
-                                <th>Name</th>
-                                <th>Last name</th>
-                                <th>Department</th>
-                                <th>Permission</th>
-                                <th>Locker access</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <?php 
+                    <div style="overflow-x:auto;">
+                        <table id="dataTable" class="table table-striped">
+                            <thead style="vertical-align: top;">
+                                <tr>
+                                    <th>User ID</th>
+                                    <th>Name</th>
+                                    <th>Last name</th>
+                                    <th>Department</th>
+                                    <th>Permission</th>
+                                    <th>Locker access</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <?php 
 				$Query = "SELECT personid, name, lname, department, permission FROM person";
 				$result = mysqli_query($conn, $Query) or die("database error:". mysqli_error($conn));
 				while( $row = mysqli_fetch_assoc($result) ) {
@@ -112,31 +116,31 @@ $errors = array();
                         }    
                     }
 				?>
-                            <tr>
-                                <td>
-                                    <?php echo $row['personid']; ?>
-                                </td>
-                                <td>
-                                    <?php echo $row['name']; ?>
-                                </td>
-                                <td>
-                                    <?php echo $row['lname']; ?>
-                                </td>
-                                <td>
-                                    <?php echo $row['department']; ?>
-                                </td>
-                                <td>
-                                    <?php echo $row['permission']; ?>
-                                </td>
-                                <td>
-                                    <?php echo $locker; ?>
-                                </td>
-                            </tr>
-                            <?php } ?>
-                        </tbody>
-                    </table>
+                                <tr>
+                                    <td>
+                                        <?php echo $row['personid']; ?>
+                                    </td>
+                                    <td>
+                                        <?php echo $row['name']; ?>
+                                    </td>
+                                    <td>
+                                        <?php echo $row['lname']; ?>
+                                    </td>
+                                    <td>
+                                        <?php echo $row['department']; ?>
+                                    </td>
+                                    <td>
+                                        <?php echo $row['permission']; ?>
+                                    </td>
+                                    <td>
+                                        <?php echo $locker; ?>
+                                    </td>
+                                </tr>
+                                <?php } ?>
+                            </tbody>
+                        </table>
+                    </div>
                 </div>
-
             </main>
         </div>
     </div>

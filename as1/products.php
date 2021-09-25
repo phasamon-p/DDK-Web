@@ -82,24 +82,28 @@ $errors = array();
                         <li class="breadcrumb-item"><a href="../index.php">Dashboard</a></li>
                         <li class="breadcrumb-item active">Product Information</li>
                     </ol>
-                    <div class="btn-group mb-2 " style="float:left;">
-                        <button type="button" class="btn btn-primary dataExport" data-type="excel" data-filename="Product Inforamtion">Export XLS</button>
-                    </div>
-                    <table id="dataTable" class="table table-striped">
-                        <thead style="vertical-align: top;">
-                            <tr>
-                                <th>Section</th>
-                                <th>Item Number</th>
-                                <th>Product name</th>
-                                <th>Part number</th>
-                                <th>Part name</th>
-                                <th>Drawing number</th>
-                                <th>Locker</th>
-                                <th>Quantity</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <?php 
+                    <div class="row mb-2">
+                            <div class="btn-group    col-xl-12 col-md-12" style="float:left;">
+                                <button type="button" class="btn btn-primary dataExport" data-type="excel"
+                                    data-filename="Product Log">Export XLS</button>
+                            </div>
+                        </div>
+                    <div style="overflow-x:auto;">
+                        <table id="dataTable" class="table table-striped">
+                            <thead style="vertical-align: top;">
+                                <tr>
+                                    <th>Section</th>
+                                    <th>Item Number</th>
+                                    <th>Product name</th>
+                                    <th>Part number</th>
+                                    <th>Part name</th>
+                                    <th>Drawing number</th>
+                                    <th>Locker</th>
+                                    <th>Quantity</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <?php 
 				$Query = "SELECT section, qr_code, product_name, part_no, part_name, drawing_no, locker, quantity FROM products";
 				$result = mysqli_query($conn, $Query) or die("database error:". mysqli_error($conn));
 				while( $row = mysqli_fetch_assoc($result) ) {
@@ -107,37 +111,37 @@ $errors = array();
 				    $result2 = mysqli_query($conn, $Query2) or die("database error:". mysqli_error($conn));
                     while( $row2 = mysqli_fetch_assoc($result2) ) {
 				?>
-                            <tr>
-                                <td>
-                                    <?php echo $row['section']; ?>
-                                </td>
-                                <td>
-                                    <?php echo $row['qr_code']; ?>
-                                </td>
-                                <td>
-                                    <?php echo $row['product_name']; ?>
-                                </td>
-                                <td>
-                                    <?php echo $row['part_no']; ?>
-                                </td>
-                                <td>
-                                    <?php echo $row['part_name']; ?>
-                                </td>
-                                <td>
-                                    <?php echo $row['drawing_no']; ?>
-                                </td>
-                                <td>
-                                    <?php echo $row2['pl_locker']; ?>
-                                </td>
-                                <td>
-                                    <?php echo $row['quantity']; ?>
-                                </td>
-                            </tr>
-                            <?php } }?>
-                        </tbody>
-                    </table>
+                                <tr>
+                                    <td>
+                                        <?php echo $row['section']; ?>
+                                    </td>
+                                    <td>
+                                        <?php echo $row['qr_code']; ?>
+                                    </td>
+                                    <td>
+                                        <?php echo $row['product_name']; ?>
+                                    </td>
+                                    <td>
+                                        <?php echo $row['part_no']; ?>
+                                    </td>
+                                    <td>
+                                        <?php echo $row['part_name']; ?>
+                                    </td>
+                                    <td>
+                                        <?php echo $row['drawing_no']; ?>
+                                    </td>
+                                    <td>
+                                        <?php echo $row2['pl_locker']; ?>
+                                    </td>
+                                    <td>
+                                        <?php echo $row['quantity']; ?>
+                                    </td>
+                                </tr>
+                                <?php } }?>
+                            </tbody>
+                        </table>
+                    </div>
                 </div>
-
             </main>
         </div>
     </div>
